@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Libreria</string>
+
+    <string name="str_btnbuscar">BUSCAR LIBRO</string>
+    <string name="str_btnregistrar">REGISTRAR LIBROS</string>
+    <string name="str_btnListar">LISTAR LIBROS</string>
+
+    <string name="str_text">Titulo</string>
+    <string name="str_cost">Precio Libro</string>
+    <string name="str_available">Estado</string>
+
+    <string name="str_bienvenido">Bienvenidos</string>
+    <string name="str_descripon_imagen">Todo</string>
+    <string name="str_ListarLibros">Listado de Libros</string>
+    <string name="str_gestionLibros">Gestion de Libros</string>
+    <string name="str_buscarLibros">Buscar libro por titulo</string>
+    <string name="str_digitetitulo">Digite el titulo a buscar</string>
+
+    <string name="str_btnborrar">BORRAR</string>
+    <string name="str_btnactualizar">ACTUALIZAR</string>
+    <string name="str_btnguardar">GUARDAR</string>
+
+
+</resources>
