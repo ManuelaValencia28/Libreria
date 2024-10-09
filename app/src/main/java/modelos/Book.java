@@ -12,13 +12,12 @@ public class Book {
     }
 
     //constructor con argumentos
-    public Book(Integer idbook, String text, String cost, String available) {
-        this.idbook = idbook;
+    public Book(Integer idBook, String text, String cost, String available) {
+        this.idbook = idBook;
         this.text = text;
         this.cost = cost;
         this.available = available;
     }
-
 
     public Integer getIdbook() {
         return idbook;

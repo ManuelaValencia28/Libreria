@@ -23,11 +23,13 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
     Context contexto;
     private List<Book> LibroList = new ArrayList<>();
 
+
     public BookBD(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version){
 
         super(context, name, factory, version);
         this.contexto = context;
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -47,6 +49,36 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
         insert = "INSERT INTO Book VALUES (null, 'Bajo la misma estrella', '110.000', 'No disponible')";
         sqLiteDatabase.execSQL(insert);
+
+
+        //TABLA USUARIO
+
+        String sqlUser =  "CREATE TABLE User (" +
+                "_idUser INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT, " +
+                "email TEXT, " +
+                "password TEXT, " +
+                "status INTEGER)";
+        // Ejecutar la creación de la tabla
+        sqLiteDatabase.execSQL(sqlUser);
+
+        String insertUser = "INSERT INTO Book VALUES (01, 'Manuela', 'manuela@gmail.com', 'manu2024', 1)";
+        sqLiteDatabase.execSQL(insertUser);
+
+        insertUser = "INSERT INTO Book VALUES (02, 'Sebastian', 'sebastian@gmail.com', 'sebas2024', 1)";
+        sqLiteDatabase.execSQL(insertUser);
+
+        //TABLA RENTA LIBRO
+
+        String sqlRent = "CREATE TABLE Rent (" +
+                "_idRent INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "_idUser INTEGER, " +
+                "_idBook INTEGER, " +
+                "date TEXT, " +  // Se usa TEXT para almacenar la fecha en formato 'YYYY-MM-DD'
+                "FOREIGN KEY(_idUser) REFERENCES User(_idUser), " +
+                "FOREIGN KEY(_idBook) REFERENCES Book(_idBook))";
+
+        sqLiteDatabase.execSQL(sqlRent);
 
     }
 
@@ -73,6 +105,8 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
             if(cursor != null) cursor.close();
         }
     }
+
+
 
     private Book extraerBook(Cursor cursor) {
         Book book = new Book(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
@@ -122,6 +156,8 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         cursor.close();
         return LibroList;
     }
+
+
 
     @Override
     public void agregar(Book book) {
