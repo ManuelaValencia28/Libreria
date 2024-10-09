@@ -20,5 +20,7 @@
     <string name="str_btnactualizar">ACTUALIZAR</string>
     <string name="str_btnguardar">GUARDAR</string>
 
+    <string name="str_Login">INICIAR SESIÓN</string>
+    <string name="str_Registro">REGISTRARSE</string>
 
 </resources>
