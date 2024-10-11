@@ -1,5 +1,7 @@
 package controladores;
 
+import android.database.Cursor;
+
 import java.util.List;
 
 import modelos.Book;
@@ -19,4 +21,12 @@ public interface ILibroBD {
     void borrar(int idbook); //Elimina el elemento indicado con el idbook
 
 
+    // Obtener todos los usuarios
+    Cursor getAllUsers();
+
+    // Actualizar un usuario
+    boolean actualizarUsuario(int id, String email, String password);
+
+    // Eliminar un usuario
+    boolean eliminarUsuario(int id);
 }

@@ -202,4 +202,28 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
     }
 
 
+    // Obtener todos los usuarios
+    public Cursor getAllUsers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM User", null);
+    }
+
+    // Actualizar un usuario
+    public boolean actualizarUsuario(int id, String email, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("email", email);
+        contentValues.put("password", password);
+        long result = db.update("User", contentValues, "id = ?", new String[]{String.valueOf(id)});
+        return result != -1;  // Si el resultado es distinto de -1, la actualización fue exitosa
+    }
+
+    // Eliminar un usuario
+    public boolean eliminarUsuario(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int result = db.delete("User", "id = ?", new String[]{String.valueOf(id)});
+        return result > 0;  // Retorna true si se eliminó el usuario
+    }
+
+
 }//BookDB
