@@ -1,6 +1,7 @@
 package com.example.libreria;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -27,13 +28,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         // Inicializar campos y botones
         txtUsername = findViewById(R.id.username);
@@ -61,10 +56,16 @@ public class Login extends AppCompatActivity {
                 if (verificarUsuario(username, password)) {
                     Toast.makeText(Login.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
 
-                    // Redirigir a la actividad principal
+                    // Guardar estado en SharedPreferences para indicar que el usuario ya inició sesión
+                    SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isRegistered", true);  // Cambiar a true cuando el usuario haya iniciado sesión
+                    editor.apply();
+
+                    // Redirigir a la actividad principal (librería)
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
-                    finish(); // Cerrar la actividad de login
+                    finish();  // Cerrar la actividad de login
                 } else {
                     Toast.makeText(Login.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                 }
