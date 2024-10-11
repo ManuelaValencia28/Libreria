@@ -3,6 +3,7 @@ package com.example.libreria;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;  // Importa SharedPreferences
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,21 +11,27 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-    //*Actua como la plantilla principal de la app, estan los botones para registrar
-    //*listar y buscar los libros
-    //*implemente OnclickListener para manejar los clicks de los botones
-    //* Dependiendo del boton que se presiona, se muestra un mensaje y se redirige al usuario a la actividad
-    // correspendiente (Gestionar el libro, Listar los libros, o buscar un libro)
-
     Context context;
     Button btnListar, btnregistrar, btnbuscar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        init();
+
+        // Verifica si el usuario ya está registrado
+        SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+        boolean isRegistered = preferences.getBoolean("isRegistered", false);
+
+        if (!isRegistered) {
+            // Redirigir a la actividad de registro si no está registrado
+            Intent intent = new Intent(MainActivity.this, registro.class);
+            startActivity(intent);
+            finish();
+        } else {
+            // Continuar con la lógica de la actividad principal
+            setContentView(R.layout.activity_main);
+            init();
+        }
     }
 
     // Inicialización de los botones y asignación de OnClickListener

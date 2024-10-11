@@ -42,7 +42,7 @@ public class ListadoLibrosActivity extends AppCompatActivity implements SelectLi
 
     private void init(){
         context =this.getApplicationContext();
-        bookBD = new BookBD(context, "BookBD.db", null, 1);
+        bookBD = new BookBD(context, "BookBD.db", null, 2);
         ListView = findViewById(R.id.listaLibros);
         llenarListView();
 

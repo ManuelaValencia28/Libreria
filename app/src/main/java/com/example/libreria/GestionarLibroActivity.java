@@ -91,7 +91,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
     //para almacenar o actualizar los datos de un libro en la BD
 
     private void guardar() {
-        bookBD = new BookBD(context, "BookBD.db", null, 1);
+        bookBD = new BookBD(context, "BookBD.db", null, 2);
         Book book = llenarDatosLibro();
         if (idBook == 0) {
             bookBD.agregar(book);
@@ -106,7 +106,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
 
     //elimina un libro
     private void Borrar() {
-        bookBD = new BookBD(context, "BookBD.db", null, 1);
+        bookBD = new BookBD(context, "BookBD.db", null, 2);
         if (idBook == 0) {
             Toast.makeText(context, "NO ES POSIBLE BORRAR.", Toast.LENGTH_LONG).show();
         } else {

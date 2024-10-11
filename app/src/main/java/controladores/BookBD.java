@@ -33,6 +33,8 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
+
         // Crear la estructura de la BD
         String sql = "CREATE TABLE Book (" +
                 "_idBook INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -52,21 +54,22 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
 
         //TABLA USUARIO
-
+        // Crear tabla User
         String sqlUser =  "CREATE TABLE User (" +
                 "_idUser INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT, " +
-                "email TEXT, " +
+                "username TEXT, " +
+                "email TEXT UNIQUE, " + // Agregar UNIQUE para el email
                 "password TEXT, " +
                 "status INTEGER)";
         // Ejecutar la creación de la tabla
         sqLiteDatabase.execSQL(sqlUser);
 
-        String insertUser = "INSERT INTO Book VALUES (01, 'Manuela', 'manuela@gmail.com', 'manu2024', 1)";
-        sqLiteDatabase.execSQL(insertUser);
+        // Insertar usuarios predeterminados
+        String insertUser1 = "INSERT INTO User (username, email, password, status) VALUES ('Manuela', 'manuela@gmail.com', 'manu2024', 1)";
+        sqLiteDatabase.execSQL(insertUser1);
 
-        insertUser = "INSERT INTO Book VALUES (02, 'Sebastian', 'sebastian@gmail.com', 'sebas2024', 1)";
-        sqLiteDatabase.execSQL(insertUser);
+        String insertUser2 = "INSERT INTO User (username, email, password, status) VALUES ('Sebastian', 'sebastian@gmail.com', 'sebas2024', 1)";
+        sqLiteDatabase.execSQL(insertUser2);
 
         //TABLA RENTA LIBRO
 
@@ -84,7 +87,11 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Aquí puedes eliminar la tabla anterior y crear una nueva si es necesario
+        db.execSQL("DROP TABLE IF EXISTS Book");
+        db.execSQL("DROP TABLE IF EXISTS User");
+        onCreate(db);
 
     }
 

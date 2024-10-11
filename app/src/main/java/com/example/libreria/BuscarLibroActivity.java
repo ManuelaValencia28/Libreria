@@ -60,7 +60,7 @@ public class BuscarLibroActivity extends AppCompatActivity implements View.OnCli
     }
 
     private Book buscarlibro(String text) {
-        BookBD = new BookBD(context, "BookBD.db", null, 1);
+        BookBD = new BookBD(context, "BookBD.db", null, 2);
         Book Book = BookBD.elemento(text);
         return Book;
     }

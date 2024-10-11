@@ -3,7 +3,7 @@ package modelos;
 public class User {
 
     private Integer  idUser, status;
-    private String  name, email, password;
+    private String  username, email, password;
 
 
     //constructos sin argumentos o por defecto vacio
@@ -12,9 +12,9 @@ public class User {
     }
 
     //constructor con argumentos
-    public User(Integer idUser, String name, String email, String password, Integer status) {
+    public User(Integer idUser, String username, String email, String password, Integer status) {
         this.idUser = idUser;
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.status = status;
@@ -37,11 +37,11 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
     public String getEmail() {
@@ -64,7 +64,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "idUser =" + idUser +
-                ", name =" + name +
+                ", name =" + username +
                 ", email ='" + email + '\'' +
                 ", password ='" + password + '\'' +
                 ", status ='" + status + '\'' +'}';
