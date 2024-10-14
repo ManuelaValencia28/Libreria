@@ -35,4 +35,13 @@
         android:id="@+id/btnlistar"
         android:layout_gravity="center_horizontal"
         android:text="@string/str_btnListar" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnGestionarUser"
+        android:layout_gravity="center_horizontal"
+        android:text="GESTIONAR USUARIOS" />
+
+    
 </LinearLayout>

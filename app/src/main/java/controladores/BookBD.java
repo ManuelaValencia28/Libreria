@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modelos.Book;
+import modelos.User;
 
 public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
@@ -224,6 +225,8 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         int result = db.delete("User", "id = ?", new String[]{String.valueOf(id)});
         return result > 0;  // Retorna true si se eliminó el usuario
     }
+
+
 
 
 }//BookDB

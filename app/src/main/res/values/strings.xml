@@ -4,6 +4,8 @@
     <string name="str_btnbuscar">BUSCAR LIBRO</string>
     <string name="str_btnregistrar">REGISTRAR LIBROS</string>
     <string name="str_btnListar">LISTAR LIBROS</string>
+    <string name="str_btnEliminar">ElIMINAR USUARIO</string>
+    <string name="str_btnUpdate">ACTUALIZAR DATOS</string>
 
     <string name="str_text">Titulo</string>
     <string name="str_cost">Precio Libro</string>

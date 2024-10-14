@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Context context;
-    Button btnListar, btnregistrar, btnbuscar;
+    Button btnListar, btnregistrar, btnbuscar, btnGesUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +40,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnregistrar = findViewById(R.id.btnregistrar);
         btnListar = findViewById(R.id.btnlistar);
         btnbuscar = findViewById(R.id.btnbuscar);
+        btnGesUser = findViewById(R.id.btnGestionarUser);
 
         // Asignar OnClickListener
         btnregistrar.setOnClickListener(this);
         btnListar.setOnClickListener(this);
         btnbuscar.setOnClickListener(this);
+        btnGesUser.setOnClickListener(this);
     }
 
     @Override
@@ -66,6 +68,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(context, "Buscar", Toast.LENGTH_LONG).show();
             Intent i3 = new Intent(context, BuscarLibroActivity.class);
             startActivity(i3);
+        } else if (view.getId() == R.id.btnGestionarUser) {
+            Toast.makeText(context, "Gestionar usuarios", Toast.LENGTH_LONG).show();
+            Intent i4 = new Intent(context, GestionarUsuarioActivity.class);
+            startActivity(i4);
         }
+
+
     }
 }
