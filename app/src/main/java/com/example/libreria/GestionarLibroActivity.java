@@ -21,7 +21,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
 
     Context context;
     EditText txttext, txtprecio, txtavailable;
-    Button btnGuardar, btnActualizar, btnBorrar;  // Declara los botones
+    Button btnGuardar, btnActualizar, btnBorrar, btnRent;  // Declara los botones
     int idBook;
 
     BookBD bookBD;
@@ -44,11 +44,13 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         btnGuardar = findViewById(R.id.ges_btnguardar);
         btnActualizar = findViewById(R.id.ges_btnactualizar);
         btnBorrar = findViewById(R.id.ges_btnborrar);
+        btnRent = findViewById(R.id.btnRentarBook);
 
         // Asigna el OnClickListener a cada botón
         btnGuardar.setOnClickListener(this);
         btnActualizar.setOnClickListener(this);
         btnBorrar.setOnClickListener(this);
+        btnRent.setOnClickListener(this);
 
         // Recibe los datos del Intent
         Intent i = getIntent();

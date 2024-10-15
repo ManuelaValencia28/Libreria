@@ -51,12 +51,12 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
 
                 if(!Id.getText().toString().isEmpty()){
                     if(searchID(Id.getText().toString()).size()>0){
+
                         Username.setText(tblUser.getName());
                         Email.setText(tblUser.getEmail());
                         password.setText(tblUser.getPassword());
 
-                        Delete.setEnabled(true);
-                        Update.setEnabled(true);
+
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "EL usuario no se esncuntra registrado en la base de datos", Toast.LENGTH_LONG).show();
@@ -77,11 +77,11 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
                 String mPassword = password.getText().toString();
 
                 if(checkData(mIdUser,mUsername,mEmail,mPassword)){
-                    if ( searchID(mIdUser).size()==0){
-                        Integer id= Integer.parseInt(mIdUser);
+                    if (searchID(mIdUser).size()==0){
+                        int id= Integer.parseInt(mIdUser);
                         bookBD.actualizarUsuario(id,mEmail,mPassword);
                         Toast.makeText(getApplicationContext(), "Datos actualizados con exito", Toast.LENGTH_LONG).show();
-                        Update.setEnabled(false);
+
                     }
                 }
                 else {
@@ -102,10 +102,10 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         //eliminar producto
-                                        Integer id = Integer.parseInt(mIdUser);
+                                        int id = Integer.parseInt(mIdUser);
                                         bookBD.eliminarUsuario(id);
                                         Toast.makeText(getApplicationContext(), "Usuario borrado con exito", Toast.LENGTH_LONG).show();
-                                        Delete.setEnabled(false);
+
                                     }
                                 })
                                 .setNegativeButton("Cancelar",null)
@@ -126,7 +126,7 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
         ArrayList<User> arrUser = new ArrayList<User>();
         // Crear un objeto de la clase SQLiteDatabase
         SQLiteDatabase userRead = bookBD.getReadableDatabase();
-        String query = "Select description, price, typeref from product where reference = '"+mIdUser+"'";
+        String query = "Select username, email, password from User where _idUser = '"+idUser+"'";
         // Generar una tabla cursor para almacenar los datos del query
         Cursor cUser = userRead.rawQuery(query,null);
         // Chequear como quedo la tabla cursor
@@ -142,7 +142,7 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
 
 
     private boolean checkData(String mIdUser, String mUsername, String mEmail, String mPassword) {
-        return !mIdUser.isEmpty() && !mUsername.isEmpty() && mEmail.isEmpty() && mPassword.isEmpty();
+        return !mIdUser.isEmpty() && !mUsername.isEmpty() && !mEmail.isEmpty() && !mPassword.isEmpty();
     }
 
 }

@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="Actualizar Usuario"
             android:layout_margin="10dp"
-            android:enabled="false"
+
             />
 
         <Button
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:text="Eliminar Usuario"
             android:layout_margin="10dp"
-            android:enabled="false"
+
             />
 
     </LinearLayout>

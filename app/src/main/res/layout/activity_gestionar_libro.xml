@@ -89,5 +89,21 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <Button
+            android:id="@+id/btnRentarBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rentar libro"
+            android:layout_margin="30sp"
+            android:gravity="center"
+            />
+
+
+    </LinearLayout>
 
 </LinearLayout>
