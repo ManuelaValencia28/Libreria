@@ -210,23 +210,33 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
     }
 
     // Actualizar un usuario
-    public boolean actualizarUsuario(int id, String email, String password) {
+    public boolean actualizarUsuario(int id, String username, String email, String password, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put("username", username); // Agrega esta línea
         contentValues.put("email", email);
         contentValues.put("password", password);
-        long result = db.update("User", contentValues, "id = ?", new String[]{String.valueOf(id)});
-        return result != -1;  // Si el resultado es distinto de -1, la actualización fue exitosa
+        contentValues.put("status", status);
+
+        Log.d("DB_UPDATE", "Actualizando usuario con ID: " + id + " Username: " + username + " Email: " + email + " Password: " + password);
+
+        int rowsAffected = db.update("User", contentValues, "_idUser = ?", new String[]{String.valueOf(id)});
+        Log.d("DB_UPDATE", "Filas afectadas: " + rowsAffected);
+        return rowsAffected > 0; // True si se actualizó al menos un registro
     }
+
+
+
+
+
 
     // Eliminar un usuario
     public boolean eliminarUsuario(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int result = db.delete("User", "id = ?", new String[]{String.valueOf(id)});
+
+        // Eliminar el usuario según su _idUser
+        int result = db.delete("User", "_idUser = ?", new String[]{String.valueOf(id)});
         return result > 0;  // Retorna true si se eliminó el usuario
     }
-
-
-
 
 }//BookDB

@@ -3,9 +3,6 @@ package com.example.libreria;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -21,53 +18,64 @@ import modelos.User;
 
 public class GestionarUsuarioActivity extends AppCompatActivity {
 
-    EditText Id, Username, Email, password;
+    EditText Id, Username, Email, password, estadoUser;
     Button Delete, Update, Search;
 
     BookBD bookBD = new BookBD(this, "BookBD.db", null, 2);
-
-    User tblUser  = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestionar_usuario);
 
+        // Asignar referencias a los elementos de la UI
         Id = findViewById(R.id.IdUser);
-        Username= findViewById(R.id.Username);
+        Username = findViewById(R.id.Username);
         Email = findViewById(R.id.Email);
         password = findViewById(R.id.password);
-        Delete  =findViewById(R.id.btnEliminarUsuario);
+        estadoUser = findViewById(R.id.estadoUser);
+        Delete = findViewById(R.id.btnEliminarUsuario);
         Update = findViewById(R.id.btnActualizarUsuario);
         Search = findViewById(R.id.btnbuscar);
 
-
-
-        //eventos
-
+        // Evento de búsqueda
         Search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!Id.getText().toString().isEmpty()) {
+                    // Buscar usuario por ID
+                    ArrayList<User> result = searchID(Id.getText().toString());
+                    if (!result.isEmpty()) {
+                        // Obtener el primer usuario de la lista
+                        User user = result.get(0);
 
-                if(!Id.getText().toString().isEmpty()){
-                    if(searchID(Id.getText().toString()).size()>0){
+                        // Asignar los valores a los campos
+                        Username.setText(user.getName());
+                        Email.setText(user.getEmail());
+                        password.setText(user.getPassword());
 
-                        Username.setText(tblUser.getName());
-                        Email.setText(tblUser.getEmail());
-                        password.setText(tblUser.getPassword());
+                        // Mostrar el estado del usuario y gestionar el botón "Eliminar"
+                        String estado = user.getStatus() == 1 ? "No Sancionado" : "Sancionado";
+                        estadoUser.setText(estado);
 
-
+                        // Desactivar el botón "Eliminar" si el usuario está sancionado
+                        if (estado.equals("Sancionado")) {
+                            Delete.setEnabled(false); // Desactivar el botón
+                        } else {
+                            Delete.setEnabled(true);  // Activar el botón
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "El usuario no se encuentra registrado en la base de datos", Toast.LENGTH_LONG).show();
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(), "EL usuario no se esncuntra registrado en la base de datos", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Campo de busqueda vacio", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Campo de búsqueda vacío", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+
+
+        // Evento de actualización
         Update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,74 +83,80 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
                 String mUsername = Username.getText().toString();
                 String mEmail = Email.getText().toString();
                 String mPassword = password.getText().toString();
+                String mStatus = estadoUser.getText().toString().equals("No sancionado") ? "1" : "0";
 
-                if(checkData(mIdUser,mUsername,mEmail,mPassword)){
-                    if (searchID(mIdUser).size()==0){
-                        int id= Integer.parseInt(mIdUser);
-                        bookBD.actualizarUsuario(id,mEmail,mPassword);
-                        Toast.makeText(getApplicationContext(), "Datos actualizados con exito", Toast.LENGTH_LONG).show();
-
+                if (checkData(mIdUser, mUsername, mEmail, mPassword)) {
+                    // Verificar si el usuario existe
+                    if (searchID(mIdUser).size() > 0) {
+                        int id = Integer.parseInt(mIdUser);
+                        // Actualizar datos del usuario
+                        bookBD.actualizarUsuario(id, mUsername, mEmail, mPassword, mStatus);
+                        Toast.makeText(getApplicationContext(), "Datos actualizados con éxito", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "Faltan campos por llenar", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+        // Evento de eliminación
         Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String mIdUser = Id.getText().toString();
-                if(!mIdUser.isEmpty()){
-                    if (searchID(mIdUser).size()>0){
-                        new AlertDialog.Builder(GestionarUsuarioActivity.this).setTitle("Eliminar usuario ")
-                                .setMessage("¿Estas seguro que deseas borrar este usuario?")
-                                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //eliminar producto
-                                        int id = Integer.parseInt(mIdUser);
-                                        bookBD.eliminarUsuario(id);
-                                        Toast.makeText(getApplicationContext(), "Usuario borrado con exito", Toast.LENGTH_LONG).show();
-
+                if (!mIdUser.isEmpty()) {
+                    if (searchID(mIdUser).size() > 0) {
+                        new AlertDialog.Builder(GestionarUsuarioActivity.this)
+                                .setTitle("Eliminar usuario")
+                                .setMessage("¿Estás seguro de que deseas borrar este usuario?")
+                                .setPositiveButton("Eliminar", (dialogInterface, i) -> {
+                                    int id = Integer.parseInt(mIdUser);
+                                    if (!bookBD.eliminarUsuario(id)) {
+                                        Toast.makeText(getApplicationContext(), "No puedes eliminar el usuario, tiene deudas", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Usuario eliminado exitosamente", Toast.LENGTH_LONG).show();
                                     }
                                 })
-                                .setNegativeButton("Cancelar",null)
+                                .setNegativeButton("Cancelar", null)
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Campo de búsqueda vacío", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
-
     }
 
-
+    // Método para buscar usuario por ID
     private ArrayList<User> searchID(String mIdUser) {
         Integer idUser = Integer.parseInt(mIdUser);
-        // Crear el objeto de tipo ArrayList que será el valor que retorne
-        ArrayList<User> arrUser = new ArrayList<User>();
-        // Crear un objeto de la clase SQLiteDatabase
+        ArrayList<User> arrUser = new ArrayList<>();
         SQLiteDatabase userRead = bookBD.getReadableDatabase();
-        String query = "Select username, email, password from User where _idUser = '"+idUser+"'";
-        // Generar una tabla cursor para almacenar los datos del query
-        Cursor cUser = userRead.rawQuery(query,null);
-        // Chequear como quedo la tabla cursor
-        if (cUser.moveToFirst()){
+
+        // Incluir la columna status en la consulta SQL
+        String query = "SELECT username, email, password, status FROM User WHERE _idUser = '" + idUser + "'";
+        Cursor cUser = userRead.rawQuery(query, null);
+
+        if (cUser.moveToFirst()) {
+            User tblUser = new User(); // Crear nuevo objeto User
             tblUser.setIdUser(idUser);
             tblUser.setName(cUser.getString(0));
             tblUser.setEmail(cUser.getString(1));
             tblUser.setPassword(cUser.getString(2));
+            tblUser.setStatus(cUser.getInt(3)); // Asignar el estado
             arrUser.add(tblUser);
         }
+        cUser.close(); // Cerrar cursor
         return arrUser;
     }
 
-
+    // Verificar si todos los campos tienen datos
     private boolean checkData(String mIdUser, String mUsername, String mEmail, String mPassword) {
         return !mIdUser.isEmpty() && !mUsername.isEmpty() && !mEmail.isEmpty() && !mPassword.isEmpty();
     }
-
 }

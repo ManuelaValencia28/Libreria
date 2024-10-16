@@ -60,13 +60,24 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         if (idBook != 0) {
             txttext.setText(bolsa.getString("text"));
             txtprecio.setText(bolsa.getString("cost"));
-            txtavailable.setText(bolsa.getString("available"));
+            String availableStatus = bolsa.getString("available");
+            txtavailable.setText(availableStatus);
+
+            // Desactivar el botón de rentar si el libro ya está "No disponible"
+            if (availableStatus.equals("No disponible")) {
+                btnRent.setEnabled(false);  // Desactiva el botón de rentar
+            } else {
+                btnRent.setEnabled(true);  // Activa el botón si está disponible
+            }
+
             btnGuardar.setEnabled(false);
-        }else{
+        } else {
             btnActualizar.setEnabled(false);
             btnBorrar.setEnabled(false);
+            btnRent.setEnabled(false);  // Desactiva el botón de rentar si es un libro nuevo
         }
     }
+
 
     private void limpiarcampos() {
         idBook = 0;
@@ -85,10 +96,11 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         book.setIdbook(idBook);
         book.setText(t);
         book.setCost(p);
-        book.setAvailable(a);
+        book.setAvailable(a); // Mantiene el estado actual del campo disponible.
 
         return book;
     }
+
 
     //para almacenar o actualizar los datos de un libro en la BD
 
@@ -121,6 +133,27 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         }
     }
 
+    private void rentar() {
+        bookBD = new BookBD(context, "BookBD.db", null, 2);
+
+        if (idBook == 0) {
+            Toast.makeText(context, "NO SE PUEDE RENTAR UN LIBRO INEXISTENTE.", Toast.LENGTH_LONG).show();
+        } else {
+            // Actualiza el campo disponible a "No disponible"
+            Book book = llenarDatosLibro();
+            book.setAvailable("No disponible");  // Cambia el estado a no disponible.
+            bookBD.actualizar(idBook, book);
+
+            // Actualiza la UI para reflejar el cambio
+            txtavailable.setText("No disponible");
+            btnActualizar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            btnRent.setEnabled(false);  // Desactiva el botón de rentar.
+            Toast.makeText(context, "LIBRO RENTADO EXITOSAMENTE.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
     @Override
     public void onClick(View view) {
         int id = view.getId();  // Almacena el ID del botón clicado
@@ -131,7 +164,10 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
             guardar();  // También llama a la función guardar()
         } else if (id == R.id.ges_btnborrar) {
             Borrar();   // Llama a la función borrar()
+        } else if (id == R.id.btnRentarBook) {
+            rentar();   // Llama a la función rentar
         }
     }
+
 
 }

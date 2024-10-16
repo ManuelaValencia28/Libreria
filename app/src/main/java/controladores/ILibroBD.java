@@ -25,7 +25,7 @@ public interface ILibroBD {
     Cursor getAllUsers();
 
     // Actualizar un usuario
-    boolean actualizarUsuario(int id, String email, String password);
+    boolean actualizarUsuario(int id,String username, String email, String password, String status);
 
     // Eliminar un usuario
     boolean eliminarUsuario(int id);
