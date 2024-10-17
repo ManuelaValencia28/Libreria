@@ -38,6 +38,18 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
         Update = findViewById(R.id.btnActualizarUsuario);
         Search = findViewById(R.id.btnbuscar);
 
+
+        // Obtener los datos del Bundle
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Id.setText(String.valueOf(extras.getInt("idUser")));
+            Username.setText(extras.getString("username"));
+            Email.setText(extras.getString("email"));
+            password.setText(extras.getString("password"));
+
+            Id.setEnabled(false);
+        }
+
         // Evento de búsqueda
         Search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +95,7 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
                 String mUsername = Username.getText().toString();
                 String mEmail = Email.getText().toString();
                 String mPassword = password.getText().toString();
-                String mStatus = estadoUser.getText().toString().equals("No sancionado") ? "1" : "0";
+                String mStatus = estadoUser.getText().toString().equals("No Sancionado") ? "1" : "0";
 
                 if (checkData(mIdUser, mUsername, mEmail, mPassword)) {
                     // Verificar si el usuario existe

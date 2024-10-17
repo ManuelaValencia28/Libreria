@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Context context;
-    Button btnListar, btnregistrar, btnbuscar, btnGesUser, btlogin, btregistro;
+    Button btnListar, btnregistrar, btnbuscar, btnGesUser, btlogin, btregistro, btnlistarUsuarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGesUser = findViewById(R.id.btnGestionarUser);
         btlogin = findViewById(R.id.btlogin);
         btregistro = findViewById(R.id.btregistro);
+        btnlistarUsuarios = findViewById(R.id.btnlistarUsuarios);
 
         // Asignar OnClickListener
         btnregistrar.setOnClickListener(this);
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGesUser.setOnClickListener(this);
         btlogin.setOnClickListener(this);
         btregistro.setOnClickListener(this);
+        btnlistarUsuarios.setOnClickListener(this);
     }
 
     @Override
@@ -76,15 +78,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(context, "Gestionar usuarios", Toast.LENGTH_LONG).show();
             Intent i4 = new Intent(context, GestionarUsuarioActivity.class);
             startActivity(i4);
-        }else if (view.getId() == R.id.btlogin) {
+        } else if (view.getId() == R.id.btlogin) {
             Toast.makeText(context, "Login", Toast.LENGTH_LONG).show();
             Intent i5 = new Intent(context, Login.class);
             startActivity(i5);
-        }else if (view.getId() == R.id.btregistro) {
+        } else if (view.getId() == R.id.btregistro) {
             Toast.makeText(context, "registro", Toast.LENGTH_LONG).show();
             Intent i6 = new Intent(context, registro.class);
             startActivity(i6);
+        } else if (view.getId() == R.id.btnlistarUsuarios) {
+            Toast.makeText(context, "Listar usuarios", Toast.LENGTH_LONG).show();
+            Intent i7 = new Intent(context, ListarUsuarios.class);
+            startActivity(i7);
         }
-
     }
 }

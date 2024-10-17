@@ -23,6 +23,7 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
     // elemento(int idBook) y elemento(String text) para obtener un libro segun su id o titulo
     Context contexto;
     private List<Book> LibroList = new ArrayList<>();
+    private List<User> UserList = new ArrayList<>();
 
 
     public BookBD(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version){
@@ -126,6 +127,16 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         return book;
     }
 
+    private User extraerUser (Cursor cursor){
+        User user = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4));
+        user.setIdUser(cursor.getInt(0));
+        user.setName(cursor.getString(1));
+        user.setEmail(cursor.getString(2));
+        user.setPassword(cursor.getString(3));
+        user.setStatus(cursor.getInt(4));
+
+        return user;
+    }
 
     @Override
     public Book elemento(String text) {
@@ -143,6 +154,23 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
             if(cursor != null) cursor.close();
         }
     }
+
+    public User elementoUser(int idUser) {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM User WHERE _idUser=" + idUser, null);
+        try {
+            if (cursor.moveToNext())
+                return extraerUser(cursor);
+            else
+                return null;
+        } catch (Exception e) {
+            Log.d("TAG", "ERROR ELEMENTO(idUser) BookBD" + e.getMessage());
+            throw e;
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
 
     @Override
     public List<Book> Lista() {
@@ -163,6 +191,27 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         }
         cursor.close();
         return LibroList;
+    }
+
+    public List<User> ListaUser(){
+        //devuelve el registro de datos encontrados en la BD
+        SQLiteDatabase database = getReadableDatabase();
+        String sql = "SELECT * FROM User ORDER BY email ASC";
+
+        Cursor cursor = database.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do{
+                UserList.add(
+                        new User(cursor.getInt(0),
+                                cursor.getString(1),
+                                cursor.getString(2),
+                                cursor.getString(3),
+                                cursor.getInt(4))
+                );
+            }while(cursor.moveToNext());
+        }
+
+        return UserList;
     }
 
 
@@ -219,19 +268,33 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
     // Actualizar un usuario
     public boolean actualizarUsuario(int id, String username, String email, String password, String status) {
+        // Verificar que los parámetros no sean nulos o vacíos
+        if (username == null || email == null || password == null || status == null) {
+            Log.e("DB_UPDATE", "Uno o más parámetros son nulos");
+            return false;
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("username", username); // Agrega esta línea
+        contentValues.put("username", username);
         contentValues.put("email", email);
         contentValues.put("password", password);
         contentValues.put("status", status);
 
         Log.d("DB_UPDATE", "Actualizando usuario con ID: " + id + " Username: " + username + " Email: " + email + " Password: " + password);
 
-        int rowsAffected = db.update("User", contentValues, "_idUser = ?", new String[]{String.valueOf(id)});
-        Log.d("DB_UPDATE", "Filas afectadas: " + rowsAffected);
-        return rowsAffected > 0; // True si se actualizó al menos un registro
+        try {
+            int rowsAffected = db.update("User", contentValues, "_idUser = ?", new String[]{String.valueOf(id)});
+            Log.d("DB_UPDATE", "Filas afectadas: " + rowsAffected);
+            return rowsAffected > 0; // True si se actualizó al menos un registro
+        } catch (Exception e) {
+            Log.e("DB_UPDATE", "Error al actualizar el usuario: " + e.getMessage());
+            return false;
+        } finally {
+            db.close(); // Cerrar la base de datos
+        }
     }
+
     public void actualizarStatus(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
