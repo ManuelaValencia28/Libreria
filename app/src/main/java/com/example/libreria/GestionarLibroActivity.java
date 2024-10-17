@@ -23,7 +23,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
 
     Context context;
     EditText txttext, txtprecio, txtavailable, rentEmail;
-    Button btnGuardar, btnActualizar, btnBorrar, btnRent, btnRentarLibro;  // Declara los botones
+    Button btnGuardar, btnActualizar, btnBorrar, btnRent, btnRentarLibro, btnDevolver;  // Declara los botones
     int idBook;
 
     BookBD bookBD;
@@ -35,8 +35,6 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
 
         init();  // Llama al método init
     }
-
-
 
     private void init() {
         context = getApplicationContext();
@@ -51,6 +49,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         btnRent = findViewById(R.id.btnRentarBook);
         btnRentarLibro = findViewById(R.id.btnRentar);
         rentEmail = findViewById(R.id.rentEmail);
+        btnDevolver = findViewById(R.id.btnDevolver);
 
         // Asigna el OnClickListener a cada botón
         btnGuardar.setOnClickListener(this);
@@ -58,6 +57,13 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         btnBorrar.setOnClickListener(this);
         btnRent.setOnClickListener(this);
 
+        // Configura el botón Devolver
+        btnDevolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                devolver();
+            }
+        });
 
         // Recibe los datos del Intent
         Intent i = getIntent();
@@ -70,20 +76,20 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
             String availableStatus = bolsa.getString("available");
             txtavailable.setText(availableStatus);
 
-            // Desactivar el botón de rentar si el libro ya está "No disponible"
             if (availableStatus.equals("No disponible")) {
-                btnRent.setEnabled(false);  // Desactiva el botón de rentar
-                btnBorrar.setEnabled(false); // Desactiva el botón de borrar
+                btnDevolver.setVisibility(View.VISIBLE);  // Muestra el botón si el libro no está disponible
+                btnRent.setVisibility(View.GONE);         // Oculta el botón de rentar si ya está alquilado
             } else {
-                btnRent.setEnabled(true);  // Activa el botón si está disponible
-                btnBorrar.setEnabled(true);  // Activa el botón de borrar si está disponible
+                btnDevolver.setVisibility(View.GONE);     // Oculta el botón si el libro está disponible
+                btnRent.setVisibility(View.VISIBLE);      // Muestra el botón de rentar si está disponible
             }
 
             btnGuardar.setEnabled(false);
         } else {
             btnActualizar.setEnabled(false);
             btnBorrar.setEnabled(false);
-            btnRent.setEnabled(false);  // Desactiva el botón de rentar si es un libro nuevo
+            btnRent.setEnabled(false);
+            btnDevolver.setEnabled(false);  // Desactiva el botón si es un libro nuevo
         }
     }
 
@@ -191,7 +197,39 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
                 }
             }
         });
+
+        btnDevolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                devolver();
+            }
+        });
+
     }
+
+
+    private void devolver() {
+        bookBD = new BookBD(context, "BookBD.db", null, 2);
+
+        if (idBook == 0) {
+            Toast.makeText(context, "NO SE PUEDE DEVOLVER UN LIBRO INEXISTENTE.", Toast.LENGTH_LONG).show();
+        } else {
+            // Actualiza el estado del libro a "Disponible"
+            Book book = llenarDatosLibro();
+            book.setAvailable("Disponible");
+            bookBD.actualizar(idBook, book);
+
+            txtavailable.setText("Disponible");
+            btnActualizar.setEnabled(true);
+            btnBorrar.setEnabled(true);
+            btnRent.setEnabled(true);
+            btnDevolver.setEnabled(false);
+
+            Toast.makeText(context, "Libro devuelto exitosamente.", Toast.LENGTH_LONG).show();
+            finish(); // Cierra la actividad
+        }
+    }
+
 
 
 

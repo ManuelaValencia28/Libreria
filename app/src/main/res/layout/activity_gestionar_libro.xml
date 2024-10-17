@@ -133,6 +133,16 @@
             android:visibility="gone"
             />
 
+        <Button
+            android:id="@+id/btnDevolver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DEVOLVER LIBRO"
+            android:layout_margin="30sp"
+            android:gravity="center"
+            android:visibility="gone"
+            />
+
 
     </LinearLayout>
 
