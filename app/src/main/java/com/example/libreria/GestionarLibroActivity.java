@@ -79,9 +79,15 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
             if (availableStatus.equals("No disponible")) {
                 btnDevolver.setVisibility(View.VISIBLE);  // Muestra el botón si el libro no está disponible
                 btnRent.setVisibility(View.GONE);         // Oculta el botón de rentar si ya está alquilado
+
+                // Desactiva el botón de borrar si el libro está en "No disponible"
+                btnBorrar.setEnabled(false);
             } else {
                 btnDevolver.setVisibility(View.GONE);     // Oculta el botón si el libro está disponible
                 btnRent.setVisibility(View.VISIBLE);      // Muestra el botón de rentar si está disponible
+
+                // Activa el botón de borrar si el libro está disponible
+                btnBorrar.setEnabled(true);
             }
 
             btnGuardar.setEnabled(false);
