@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import java.util.Objects;
+
 import controladores.BookBD;
 import modelos.Book;
 
@@ -20,8 +22,8 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
     // los botones guardar. Si no existe, los botones actualizar y borrar estan desactivados.
 
     Context context;
-    EditText txttext, txtprecio, txtavailable;
-    Button btnGuardar, btnActualizar, btnBorrar, btnRent;  // Declara los botones
+    EditText txttext, txtprecio, txtavailable, rentEmail;
+    Button btnGuardar, btnActualizar, btnBorrar, btnRent, btnRentarLibro;  // Declara los botones
     int idBook;
 
     BookBD bookBD;
@@ -45,12 +47,15 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         btnActualizar = findViewById(R.id.ges_btnactualizar);
         btnBorrar = findViewById(R.id.ges_btnborrar);
         btnRent = findViewById(R.id.btnRentarBook);
+        btnRentarLibro = findViewById(R.id.btnRentar);
+        rentEmail = findViewById(R.id.rentEmail);
 
         // Asigna el OnClickListener a cada botón
         btnGuardar.setOnClickListener(this);
         btnActualizar.setOnClickListener(this);
         btnBorrar.setOnClickListener(this);
         btnRent.setOnClickListener(this);
+
 
         // Recibe los datos del Intent
         Intent i = getIntent();
@@ -135,22 +140,45 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
 
     private void rentar() {
         bookBD = new BookBD(context, "BookBD.db", null, 2);
+        if(rentEmail.getVisibility()== View.GONE && btnRentarLibro.getVisibility()== View.GONE){
+            rentEmail.getVisibility();
+            btnRentarLibro.getVisibility();
+            btnRent.setEnabled(false);
 
-        if (idBook == 0) {
-            Toast.makeText(context, "NO SE PUEDE RENTAR UN LIBRO INEXISTENTE.", Toast.LENGTH_LONG).show();
-        } else {
-            // Actualiza el campo disponible a "No disponible"
-            Book book = llenarDatosLibro();
-            book.setAvailable("No disponible");  // Cambia el estado a no disponible.
-            bookBD.actualizar(idBook, book);
+            btnRentarLibro.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String email = rentEmail.getText().toString();
 
-            // Actualiza la UI para reflejar el cambio
-            txtavailable.setText("No disponible");
-            btnActualizar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-            btnRent.setEnabled(false);  // Desactiva el botón de rentar.
-            Toast.makeText(context, "LIBRO RENTADO EXITOSAMENTE.", Toast.LENGTH_LONG).show();
+                    if(Objects.equals(bookBD.BuscarUserforRent(email), "1")){
+                        Toast.makeText(getApplicationContext(), "No puedes rentar libros en este momento tienes deudas pendientes", Toast.LENGTH_LONG).show();
+                    }else{
+
+                        bookBD.actualizarStatus(email);
+                        Toast.makeText(getApplicationContext(), "Libro rentado con exito", Toast.LENGTH_LONG).show();
+                        if (idBook == 0) {
+                            Toast.makeText(context, "NO SE PUEDE RENTAR UN LIBRO INEXISTENTE.", Toast.LENGTH_LONG).show();
+                        } else {
+                            // Actualiza el campo disponible a "No disponible"
+                            Book book = llenarDatosLibro();
+                            book.setAvailable("No disponible");  // Cambia el estado a no disponible.
+                            bookBD.actualizar(idBook, book);
+
+                            // Actualiza la UI para reflejar el cambio
+                            txtavailable.setText("No disponible");
+                            btnActualizar.setEnabled(false);
+                            btnBorrar.setEnabled(false);
+                            btnRent.setEnabled(false);  // Desactiva el botón de rentar.
+                            Toast.makeText(context, "LIBRO RENTADO EXITOSAMENTE.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                }
+            });
+
         }
+
+
     }
 
 

@@ -105,29 +105,38 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
         Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String mIdUser = Id.getText().toString();
-                if (!mIdUser.isEmpty()) {
-                    if (searchID(mIdUser).size() > 0) {
-                        new AlertDialog.Builder(GestionarUsuarioActivity.this)
-                                .setTitle("Eliminar usuario")
-                                .setMessage("¿Estás seguro de que deseas borrar este usuario?")
-                                .setPositiveButton("Eliminar", (dialogInterface, i) -> {
-                                    int id = Integer.parseInt(mIdUser);
-                                    if (!bookBD.eliminarUsuario(id)) {
-                                        Toast.makeText(getApplicationContext(), "No puedes eliminar el usuario, tiene deudas", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "Usuario eliminado exitosamente", Toast.LENGTH_LONG).show();
-                                    }
-                                })
-                                .setNegativeButton("Cancelar", null)
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Campo de búsqueda vacío", Toast.LENGTH_LONG).show();
+                String mStatus = estadoUser.getText().toString();
+
+                if(mStatus == "Sancionado"){
+                    Delete.setEnabled(true);
                 }
+                else {
+                    if (!mIdUser.isEmpty()) {
+                        if (searchID(mIdUser).size() > 0) {
+                            new AlertDialog.Builder(GestionarUsuarioActivity.this)
+                                    .setTitle("Eliminar usuario")
+                                    .setMessage("¿Estás seguro de que deseas borrar este usuario?")
+                                    .setPositiveButton("Eliminar", (dialogInterface, i) -> {
+                                        int id = Integer.parseInt(mIdUser);
+                                        if (!bookBD.eliminarUsuario(id)) {
+                                            Toast.makeText(getApplicationContext(), "No puedes eliminar el usuario, tiene deudas", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "Usuario eliminado exitosamente", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancelar", null)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Campo de búsqueda vacío", Toast.LENGTH_LONG).show();
+                    }
+                }
+
             }
         });
     }

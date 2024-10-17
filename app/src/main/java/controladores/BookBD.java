@@ -203,6 +203,14 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
     }
 
 
+    public String BuscarUserforRent(String email){
+
+      String Email = email;
+      SQLiteDatabase db = getReadableDatabase();
+      String query = db.rawQuery("Select status From User where email = '"+Email+"'",null).toString();
+      return query;
+    }
+
     // Obtener todos los usuarios
     public Cursor getAllUsers() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -223,6 +231,16 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         int rowsAffected = db.update("User", contentValues, "_idUser = ?", new String[]{String.valueOf(id)});
         Log.d("DB_UPDATE", "Filas afectadas: " + rowsAffected);
         return rowsAffected > 0; // True si se actualizó al menos un registro
+    }
+    public boolean actualizarStatus(String rentEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("status", 1);
+
+        int resul = db.update("User",contentValues,"email = ?", new String[]{rentEmail});
+
+        return resul > 0;// Si el resultado es mayor que 0, se actualizó con éxito
+
     }
 
 
