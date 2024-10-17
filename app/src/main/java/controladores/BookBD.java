@@ -35,57 +35,45 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
-
-        // Crear la estructura de la BD
-        String sql = "CREATE TABLE Book (" +
+        // Crear la estructura de la tabla de libros
+        String sqlBook = "CREATE TABLE Book (" +
                 "_idBook INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "text TEXT, " +
                 "cost TEXT, " +
                 "available TEXT)";
 
-        // Ejecutar la creación de la tabla
-        sqLiteDatabase.execSQL(sql);
+        sqLiteDatabase.execSQL(sqlBook);
 
-        // Insertar los datos
-        String insert = "INSERT INTO Book VALUES (null, 'POSDATA: Te amo', '80.000', 'Disponible')";
-        sqLiteDatabase.execSQL(insert);
+        // Insertar datos de libros
+        sqLiteDatabase.execSQL("INSERT INTO Book VALUES (null, 'POSDATA: Te amo', '80.000', 'Disponible')");
+        sqLiteDatabase.execSQL("INSERT INTO Book VALUES (null, 'Bajo la misma estrella', '110.000', 'No disponible')");
 
-        insert = "INSERT INTO Book VALUES (null, 'Bajo la misma estrella', '110.000', 'No disponible')";
-        sqLiteDatabase.execSQL(insert);
-
-
-        //TABLA USUARIO
-        // Crear tabla User
+        // Crear la tabla de usuarios
         String sqlUser =  "CREATE TABLE User (" +
                 "_idUser INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "username TEXT, " +
-                "email TEXT UNIQUE, " + // Agregar UNIQUE para el email
+                "email TEXT UNIQUE, " +  // Aseguramos que el correo sea único
                 "password TEXT, " +
-                "status INTEGER)";
-        // Ejecutar la creación de la tabla
+                "status INTEGER)";  // 0 = no sancionado, 1 = sancionado
+
         sqLiteDatabase.execSQL(sqlUser);
 
         // Insertar usuarios predeterminados
-        String insertUser1 = "INSERT INTO User (username, email, password, status) VALUES ('Manuela', 'manuela@gmail.com', 'manu2024', 1)";
-        sqLiteDatabase.execSQL(insertUser1);
+        sqLiteDatabase.execSQL("INSERT INTO User (username, email, password, status) VALUES ('Manuela', 'manuela@gmail.com', 'manu2024', 1)");
+        sqLiteDatabase.execSQL("INSERT INTO User (username, email, password, status) VALUES ('Sebastian', 'sebastian@gmail.com', 'sebas2024', 1)");
 
-        String insertUser2 = "INSERT INTO User (username, email, password, status) VALUES ('Sebastian', 'sebastian@gmail.com', 'sebas2024', 1)";
-        sqLiteDatabase.execSQL(insertUser2);
-
-        //TABLA RENTA LIBRO
-
+        // Crear la tabla de renta de libros
         String sqlRent = "CREATE TABLE Rent (" +
                 "_idRent INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "_idUser INTEGER, " +
                 "_idBook INTEGER, " +
                 "date TEXT, " +  // Se usa TEXT para almacenar la fecha en formato 'YYYY-MM-DD'
-                "FOREIGN KEY(_idUser) REFERENCES User(_idUser), " +
-                "FOREIGN KEY(_idBook) REFERENCES Book(_idBook))";
+                "FOREIGN KEY(_idUser) REFERENCES User(_idUser) ON DELETE CASCADE ON UPDATE CASCADE, " +
+                "FOREIGN KEY(_idBook) REFERENCES Book(_idBook) ON DELETE CASCADE ON UPDATE CASCADE)";
 
         sqLiteDatabase.execSQL(sqlRent);
-
     }
+
 
 
     @Override
@@ -252,13 +240,21 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
     }
 
 
-    public String BuscarUserforRent(String email){
+    public String BuscarUserforRent(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
 
-      String Email = email;
-      SQLiteDatabase db = getReadableDatabase();
-      String query = db.rawQuery("Select status From User where email = '"+Email+"'",null).toString();
-      return query;
+        // Buscar si el usuario existe en la base de datos por email
+        Cursor cursor = db.rawQuery("SELECT status FROM User WHERE email = ?", new String[] {email});
+
+        if (cursor.moveToFirst()) {
+            // Devuelve el estado del usuario: 0 = no sancionado, 1 = sancionado
+            return cursor.getString(0);
+        } else {
+            // Usuario no encontrado
+            return null;
+        }
     }
+
 
     // Obtener todos los usuarios
     public Cursor getAllUsers() {
@@ -313,6 +309,15 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         // Eliminar el usuario según su _idUser
         int result = db.delete("User", "_idUser = ?", new String[]{String.valueOf(id)});
         return result > 0;  // Retorna true si se eliminó el usuario
+    }
+
+    public Cursor obtenerAlquileres() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String consulta = "SELECT Rent._idRent, User.name AS userName, Book.title AS bookTitle, Rent.date " +
+                "FROM Rent " +
+                "INNER JOIN User ON Rent._idUser = User._idUser " +
+                "INNER JOIN Book ON Rent._idBook = Book._idBook";
+        return db.rawQuery(consulta, null);
     }
 
 }//BookDB
