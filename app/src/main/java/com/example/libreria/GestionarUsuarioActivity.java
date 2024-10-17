@@ -104,6 +104,7 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
                         // Actualizar datos del usuario
                         bookBD.actualizarUsuario(id, mUsername, mEmail, mPassword, mStatus);
                         Toast.makeText(getApplicationContext(), "Datos actualizados con éxito", Toast.LENGTH_LONG).show();
+                        finish();
                     } else {
                         Toast.makeText(getApplicationContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
                     }
@@ -136,6 +137,7 @@ public class GestionarUsuarioActivity extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(), "No puedes eliminar el usuario, tiene deudas", Toast.LENGTH_LONG).show();
                                         } else {
                                             Toast.makeText(getApplicationContext(), "Usuario eliminado exitosamente", Toast.LENGTH_LONG).show();
+                                            finish();
                                         }
                                     })
                                     .setNegativeButton("Cancelar", null)

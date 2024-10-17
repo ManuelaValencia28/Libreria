@@ -115,11 +115,13 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
         if (idBook == 0) {
             bookBD.agregar(book);
             Toast.makeText(context, "GUARDADO NUEVO.", Toast.LENGTH_LONG).show();
+            finish();
         } else {
             bookBD.actualizar(idBook, book);
             btnActualizar.setEnabled(false);
             btnBorrar.setEnabled(false);
             Toast.makeText(context, "ACTUALIZADO EXITOSO.", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
@@ -135,6 +137,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
             btnGuardar.setEnabled(false);
             btnActualizar.setEnabled(false);
             Toast.makeText(context, "BORRADO EXITOSO DEL REGISTRO.", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
@@ -159,6 +162,7 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
                         // Actualiza el estado del libro a 'No disponible'
                         bookBD.actualizarStatus(email);
                         Toast.makeText(getApplicationContext(), "Libro rentado con éxito", Toast.LENGTH_LONG).show();
+                        finish();
 
                         if (idBook == 0) {
                             Toast.makeText(context, "NO SE PUEDE RENTAR UN LIBRO INEXISTENTE.", Toast.LENGTH_LONG).show();
