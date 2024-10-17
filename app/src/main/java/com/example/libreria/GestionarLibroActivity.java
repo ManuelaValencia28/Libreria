@@ -140,45 +140,46 @@ public class GestionarLibroActivity extends AppCompatActivity implements View.On
 
     private void rentar() {
         bookBD = new BookBD(context, "BookBD.db", null, 2);
-        if(rentEmail.getVisibility()== View.GONE && btnRentarLibro.getVisibility()== View.GONE){
-            rentEmail.getVisibility();
-            btnRentarLibro.getVisibility();
-            btnRent.setEnabled(false);
+
+        // Verifica si los elementos de UI están ocultos y los muestra
+        if (rentEmail.getVisibility() == View.GONE && btnRentarLibro.getVisibility() == View.GONE) {
+            rentEmail.setVisibility(View.VISIBLE);  // Hacer visible el campo de correo electrónico
+            btnRentarLibro.setVisibility(View.VISIBLE);  // Hacer visible el botón de rentar
+            btnRent.setEnabled(false);  // Desactiva el botón de rentar principal
 
             btnRentarLibro.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String email = rentEmail.getText().toString();
 
-                    if(Objects.equals(bookBD.BuscarUserforRent(email), "1")){
-                        Toast.makeText(getApplicationContext(), "No puedes rentar libros en este momento tienes deudas pendientes", Toast.LENGTH_LONG).show();
-                    }else{
-
+                    // Lógica para verificar si el usuario tiene deudas pendientes
+                    if (Objects.equals(bookBD.BuscarUserforRent(email), "1")) {
+                        Toast.makeText(getApplicationContext(), "No puedes rentar libros en este momento, tienes deudas pendientes", Toast.LENGTH_LONG).show();
+                    } else {
+                        // Actualiza el estado del libro a 'No disponible'
                         bookBD.actualizarStatus(email);
-                        Toast.makeText(getApplicationContext(), "Libro rentado con exito", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Libro rentado con éxito", Toast.LENGTH_LONG).show();
+
                         if (idBook == 0) {
                             Toast.makeText(context, "NO SE PUEDE RENTAR UN LIBRO INEXISTENTE.", Toast.LENGTH_LONG).show();
                         } else {
-                            // Actualiza el campo disponible a "No disponible"
+                            // Cambia el estado del libro a 'No disponible'
                             Book book = llenarDatosLibro();
-                            book.setAvailable("No disponible");  // Cambia el estado a no disponible.
+                            book.setAvailable("No disponible");  // Cambia el estado a no disponible
                             bookBD.actualizar(idBook, book);
 
                             // Actualiza la UI para reflejar el cambio
                             txtavailable.setText("No disponible");
                             btnActualizar.setEnabled(false);
                             btnBorrar.setEnabled(false);
-                            btnRent.setEnabled(false);  // Desactiva el botón de rentar.
+                            btnRent.setEnabled(false);  // Desactiva el botón de rentar
+
                             Toast.makeText(context, "LIBRO RENTADO EXITOSAMENTE.", Toast.LENGTH_LONG).show();
                         }
                     }
-
                 }
             });
-
         }
-
-
     }
 
 

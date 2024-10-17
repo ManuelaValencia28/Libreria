@@ -232,20 +232,15 @@ public class BookBD extends SQLiteOpenHelper implements ILibroBD {
         Log.d("DB_UPDATE", "Filas afectadas: " + rowsAffected);
         return rowsAffected > 0; // True si se actualizó al menos un registro
     }
-    public boolean actualizarStatus(String rentEmail) {
+    public void actualizarStatus(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("status", 1);
+        contentValues.put("available", "No disponible");
 
-        int resul = db.update("User",contentValues,"email = ?", new String[]{rentEmail});
-
-        return resul > 0;// Si el resultado es mayor que 0, se actualizó con éxito
-
+        // Aquí asumes que el ID del libro ya está asociado a un usuario y lo actualizas
+        db.update("books", contentValues, "email=?", new String[]{email});
+        db.close();
     }
-
-
-
-
 
 
     // Eliminar un usuario
